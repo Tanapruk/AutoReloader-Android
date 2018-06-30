@@ -2,7 +2,6 @@ package com.tanapruk.autorefresh
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebChromeClient
@@ -79,7 +78,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     fun shouldReload(url: String?): Boolean {
-        try {
+        return try {
             var expectedUrl = URL(urlToSpam)
 
             if (expectedUrl.path.isEmpty()) {
@@ -88,9 +87,9 @@ class WebViewActivity : AppCompatActivity() {
             }
 
             val urlExtractFromPage = URL(url)
-            return "${urlExtractFromPage.host}${urlExtractFromPage.path}" != "${expectedUrl.host}${expectedUrl.path}"
+            "${urlExtractFromPage.host}${urlExtractFromPage.path}" != "${expectedUrl.host}${expectedUrl.path}"
         } catch (error: MalformedURLException) {
-            return false
+            false
         }
     }
 
