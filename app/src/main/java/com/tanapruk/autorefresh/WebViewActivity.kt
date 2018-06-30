@@ -59,8 +59,6 @@ class WebViewActivity : AppCompatActivity() {
                 } else {
                     showNowLoading()
                 }
-
-
             }
 
         }
@@ -73,9 +71,8 @@ class WebViewActivity : AppCompatActivity() {
                 super.onPageFinished(view, url)
                 if (shouldReload(url)) {
                     wvContent.clearCache(true)
-                    view?.loadUrl(url)
+                    view?.loadUrl(urlToSpam)
                 }
-//
             }
 
         }
@@ -83,18 +80,15 @@ class WebViewActivity : AppCompatActivity() {
 
     fun shouldReload(url: String?): Boolean {
         try {
-            val expectedUrl = URL(urlToSpam)
-            val urlExtractFromPage = URL(url)
-            Log.d("URL", "expectedUrl host:${expectedUrl.host} path:${expectedUrl.path}")
-            Log.d("URL", "urlExtractFromPage host:${urlExtractFromPage.host} path:${urlExtractFromPage.path}")
-            if (expectedUrl.path.length == 1) {
-                return urlExtractFromPage.host == expectedUrl.path
-            } else if (expectedUrl.path.length > 1) {
-                return urlExtractFromPage.host == expectedUrl.host && urlExtractFromPage.path == expectedUrl.path
-            } else {
-                return false
+            var expectedUrl = URL(urlToSpam)
+
+            if (expectedUrl.path.isEmpty()) {
+                urlToSpam += "/"
+                expectedUrl = URL(urlToSpam)
             }
 
+            val urlExtractFromPage = URL(url)
+            return "${urlExtractFromPage.host}${urlExtractFromPage.path}" != "${expectedUrl.host}${expectedUrl.path}"
         } catch (error: MalformedURLException) {
             return false
         }
