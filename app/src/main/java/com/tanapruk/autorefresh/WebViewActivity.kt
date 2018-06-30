@@ -2,21 +2,49 @@ package com.tanapruk.autorefresh
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_web_view.*
+import java.net.MalformedURLException
+import java.net.URL
 
 class WebViewActivity : AppCompatActivity() {
+
+    var urlToSpam: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
+        urlToSpam = intent.getStringExtra("URL_TO_SPAM")
+
+        setupViews()
+
+        urlToSpam?.let {
+            wvContent.loadUrl(urlToSpam)
+        }
+    }
+
+    private fun setupViews() {
+        supportActionBar?.title = urlToSpam
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         wvContent.webChromeClient = customWebChromeClient()
         wvContent.webViewClient = customWebViewClient()
+        wvContent.clearCache(true)
+        wvContent.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+    }
 
-        wvContent.loadUrl("https://www.google.com/")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun customWebChromeClient(): WebChromeClient {
@@ -24,7 +52,15 @@ class WebViewActivity : AppCompatActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
+                supportActionBar?.title = view?.url
                 pbLoading.progress = newProgress
+                if (newProgress >= 100) {
+                    hideNowLoading()
+                } else {
+                    showNowLoading()
+                }
+
+
             }
 
         }
@@ -35,12 +71,43 @@ class WebViewActivity : AppCompatActivity() {
         return object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                if (url !== "specificUrl") {
+                if (shouldReload(url)) {
+                    wvContent.clearCache(true)
                     view?.loadUrl(url)
                 }
+//
             }
 
         }
+    }
+
+    fun shouldReload(url: String?): Boolean {
+        try {
+            val expectedUrl = URL(urlToSpam)
+            val urlExtractFromPage = URL(url)
+            Log.d("URL", "expectedUrl host:${expectedUrl.host} path:${expectedUrl.path}")
+            Log.d("URL", "urlExtractFromPage host:${urlExtractFromPage.host} path:${urlExtractFromPage.path}")
+            if (expectedUrl.path.length == 1) {
+                return urlExtractFromPage.host == expectedUrl.path
+            } else if (expectedUrl.path.length > 1) {
+                return urlExtractFromPage.host == expectedUrl.host && urlExtractFromPage.path == expectedUrl.path
+            } else {
+                return false
+            }
+
+        } catch (error: MalformedURLException) {
+            return false
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        urlToSpam = savedInstanceState?.getString("URL_TO_SPAM")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("URL_TO_SPAM", urlToSpam)
     }
 
     fun showNowLoading() {

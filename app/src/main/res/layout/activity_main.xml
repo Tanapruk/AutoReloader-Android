@@ -7,31 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editText"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/etWebsite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:hint="http://www.abcd.com"
+        android:lines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnGoToWebsite"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:text="Go to website"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        app:layout_constraintVertical_bias="0.985"/>
+        app:layout_constraintTop_toBottomOf="@+id/etWebsite"
+        app:layout_constraintVertical_bias="1"/>
 
 </android.support.constraint.ConstraintLayout>
