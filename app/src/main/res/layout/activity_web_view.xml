@@ -13,6 +13,6 @@
 
     <com.daimajia.numberprogressbar.NumberProgressBar
         android:id="@+id/pbLoading"
-        style="@style/NumberProgressBar_Default" />
+        style="@style/NumberProgressBar_Grace_Yellow" />
 
 </android.support.constraint.ConstraintLayout>

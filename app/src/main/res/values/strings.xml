@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Endless</string>
+    <string name="app_name">Endless Refresher</string>
+    <string name="main_tv_title">Endless Refresher</string>
+    <string name="main_tv_description">Refresh the page until there is no redirection</string>
+    <string name="main_et_website_hint">Your website</string>
+    <string name="main_btn_go_to_website">Go to website</string>
 </resources>
