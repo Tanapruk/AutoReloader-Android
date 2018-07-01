@@ -4,9 +4,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Patterns
-import android.webkit.URLUtil
+import androidx.core.content.edit
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +28,10 @@ class MainActivity : AppCompatActivity() {
             val url = etWebsite.text.toString()
             if (Patterns.WEB_URL.matcher(url).matches()) {
                 urlToSpam = url
-                sharedPreferences.edit().putString("URL_TO_SPAM", urlToSpam).apply()
+                sharedPreferences.edit {
+                    putString("URL_TO_SPAM", urlToSpam)
+                }
+
                 val intent = Intent(this, WebViewActivity::class.java)
                 intent.putExtra("URL_TO_SPAM", url)
                 startActivity(intent)
